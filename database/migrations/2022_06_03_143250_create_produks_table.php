@@ -11,16 +11,16 @@ class CreateProduksTable extends Migration
 */
 public function up()
 {
-Schema::create('produks', function (Blueprint $table) {
-$table->increments('id');
-$table->string('nama');
-$table->integer('id_kategori');
-$table->integer('qty');
-$table->integer('harga_beli');
-$table->integer('harga_jual');
-$table->timestamps();
-});
-}
+    Schema::create('produks', function (Blueprint $table) {
+        $table->increments('id');
+        $table->string('nama');
+        $table->integer('id_kategori');
+        $table->integer('qty');
+        $table->integer('harga_beli');
+        $table->integer('harga_jual');
+        $table->timestamps();
+    });
+    }
 /**
 * Reverse the migrations.
 *

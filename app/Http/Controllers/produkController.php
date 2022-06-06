@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\produk;
+use App\kategori;
 
 class produkController extends Controller
 {
@@ -15,7 +16,7 @@ class produkController extends Controller
     public function index()
     {
         $produk = produk::all();
-        return view('produk.index');
+        return view('produk.index', compact('produk'));
     }
 
     /**
@@ -25,7 +26,9 @@ class produkController extends Controller
      */
     public function create()
     {
-        //
+        $kategori = kategori::all();
+        return view('produk.create', compact('kategori'));
+
     }
 
     /**
@@ -36,7 +39,26 @@ class produkController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $aturan = [
+        'nama' => 'required',
+        'kategori' => 'required',
+        'qty' => 'required|numeric',
+        'beli' => 'required|numeric',
+        'jual' => 'required|numeric',
+        ];
+        $pesan = [
+        'required' => 'Data ini Wajib Diisi !',
+        'numeric' => 'Mohon isi dengan angka'
+        ];
+        $this->validate($request,$aturan,$pesan);
+        produk::create([
+        'nama' => $request->nama,
+        'id_kategori' => $request->kategori,
+        'qty' => $request->qty,
+        'harga_beli' => $request->beli,
+        'harga_jual' => $request->jual,
+        ]);
+        return redirect()->route('produk.index');
     }
 
     /**
@@ -47,7 +69,8 @@ class produkController extends Controller
      */
     public function show($id)
     {
-        //
+        $produk = produk::where('id',$id)->first();
+        return view('produk.show', compact('produk'));
     }
 
     /**
@@ -58,7 +81,9 @@ class produkController extends Controller
      */
     public function edit($id)
     {
-        //
+        $kategori = kategori::all();
+        $produk = produk::where('id',$id)->first();
+        return view('produk.edit', compact('produk','kategori'));
     }
 
     /**
@@ -70,7 +95,14 @@ class produkController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        produk::where('id',$id)->update([
+            'nama' => $request->nama,
+            'id_kategori' => $request->kategori,
+            'qty' => $request->qty,
+            'harga_beli' => $request->beli,
+            'harga_jual' => $request->jual,
+        ]);
+        return redirect()->route('produk.index');
     }
 
     /**
@@ -81,6 +113,7 @@ class produkController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        produk::where('id',$id)->delete();
+        return redirect()->route('produk.index');
+    }    
 }

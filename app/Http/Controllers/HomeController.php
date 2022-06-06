@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -20,9 +21,19 @@ class HomeController extends Controller
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
+     * 
      */
     public function index()
     {
-        return view('home');
+        $kategori = DB::table('kategoris')->get();
+        $data = [];
+        $label = [];
+        foreach ($kategori as $i => $v) {
+            $value[$i] = DB::table('produks')->where('id_kategori',$v->id)->count();
+            $label[$i] = $v->nama;
+        }
+        return view('home')
+        ->with('value',json_encode($value))
+        ->with('label',json_encode($label));
     }
 }
